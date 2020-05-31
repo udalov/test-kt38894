@@ -36,9 +36,17 @@ class Kt38894Test {
     @Test
     @Suppress("UNCHECKED_CAST")
     fun testFile() {
-        val bytes = this::class.java.getResourceAsStream(
-            "kotlin/coroutines/experimental/intrinsics/IntrinsicsKt__IntrinsicsJvmKt\$buildContinuationByInvokeCall\$continuation$1.class"
-        ).readBytes()
+        testFile("kotlin/coroutines/experimental/intrinsics/IntrinsicsKt__IntrinsicsJvmKt\$buildContinuationByInvokeCall\$continuation$1.class");
+    }
+
+    @Test
+    @Suppress("UNCHECKED_CAST")
+    fun testInlinedContinuationFile() {
+        testFile("kotlin/coroutines/experimental/intrinsics/IntrinsicsKt__IntrinsicsJvmKt\$createCoroutineUnchecked$\$inlined\$buildContinuationByInvokeCall\$IntrinsicsKt__IntrinsicsJvmKt$2.class");
+    }
+
+    fun testFile(classFile : String) {
+        val bytes = this::class.java.getResourceAsStream(classFile).readBytes()
         val classNode = ClassNode().also { ClassReader(bytes).accept(it, 0) }
         val metadataAnnotation = classNode.visibleAnnotations.single()
         val values: Map<String, Any> = metadataAnnotation.values.chunked(2).map { (x, y) -> x.toString() to y }.toMap()
